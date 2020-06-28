@@ -12,15 +12,19 @@ public final class StreamUtils
     }
 
     // this has issues, but will do for now
-    private static boolean checkAvailable(final InputStream stream,
-                                          final int         required)
-        throws IOException
+    private static void checkAvailable(final InputStream stream,
+                                       final int         required)
+        throws IOException,
+               NotEnoughDataException
     {
         final int available;
 
         available = stream.available();
 
-        return available >= required;
+        if(available < required)
+        {
+            throw new NotEnoughDataException(required, available);
+        }
     }
 
     public static void readBytes(final DataInputStream stream,
@@ -28,10 +32,12 @@ public final class StreamUtils
         throws IOException,
                NotEnoughDataException
     {
-        if(!(checkAvailable(stream, bytes.length)))
+        if(stream == null)
         {
-            throw new NotEnoughDataException(bytes.length);
+            throw new IllegalArgumentException("stream cannot be null");
         }
+
+        checkAvailable(stream, bytes.length);
 
         stream.readFully(bytes);
     }
@@ -40,13 +46,14 @@ public final class StreamUtils
         throws IOException,
                NotEnoughDataException
     {
-        if(!(checkAvailable(stream, 1)))
-        {
-            throw new NotEnoughDataException(1);
-        }
-
         final byte value;
 
+        if(stream == null)
+        {
+            throw new IllegalArgumentException("stream cannot be null");
+        }
+
+        checkAvailable(stream, 1);
         value = stream.readByte();
 
         return value;
@@ -59,6 +66,12 @@ public final class StreamUtils
         final byte  value;
         final short unsigned;
 
+        if(stream == null)
+        {
+            throw new IllegalArgumentException("stream cannot be null");
+        }
+
+        checkAvailable(stream, 1);
         value    = readByte(stream);
         // Why isn't there a Byte.toUnsignedShort?!
         unsigned = (short)Byte.toUnsignedInt(value);
@@ -70,13 +83,13 @@ public final class StreamUtils
         throws IOException,
                NotEnoughDataException
     {
-        if(!(checkAvailable(stream, 2)))
+        final short value;
+        if(stream == null)
         {
-            throw new NotEnoughDataException(2);
+            throw new IllegalArgumentException("stream cannot be null");
         }
 
-        final short value;
-
+        checkAvailable(stream, 2);
         value = stream.readShort();
 
         return value;
@@ -89,6 +102,12 @@ public final class StreamUtils
         final short value;
         final int   unsigned;
 
+        if(stream == null)
+        {
+            throw new IllegalArgumentException("stream cannot be null");
+        }
+
+        checkAvailable(stream, 2);
         value    = readShort(stream);
         unsigned = Short.toUnsignedInt(value);
 
@@ -99,13 +118,14 @@ public final class StreamUtils
         throws IOException,
                NotEnoughDataException
     {
-        if(!(checkAvailable(stream, 4)))
-        {
-            throw new NotEnoughDataException(4);
-        }
-
         final int value;
 
+        if(stream == null)
+        {
+            throw new IllegalArgumentException("stream cannot be null");
+        }
+
+        checkAvailable(stream, 4);
         value = stream.readInt();
 
         return value;
@@ -118,6 +138,12 @@ public final class StreamUtils
         final int value;
         final long unsigned;
 
+        if(stream == null)
+        {
+            throw new IllegalArgumentException("stream cannot be null");
+        }
+
+        checkAvailable(stream, 4);
         value    = readInt(stream);
         unsigned = Integer.toUnsignedLong(value);
 
@@ -128,30 +154,31 @@ public final class StreamUtils
         throws IOException,
                NotEnoughDataException
     {
-        if(!(checkAvailable(stream, 4)))
-        {
-            throw new NotEnoughDataException(4);
-        }
-
         final float value;
 
+        if(stream == null)
+        {
+            throw new IllegalArgumentException("stream cannot be null");
+        }
+
+        checkAvailable(stream, 4);
         value = stream.readFloat();
 
         return value;
     }
 
-
     public static long readLong(final DataInputStream stream)
         throws IOException,
                NotEnoughDataException
     {
-        if(!(checkAvailable(stream, 8)))
-        {
-            throw new NotEnoughDataException(8);
-        }
-
         final long value;
 
+        if(stream == null)
+        {
+            throw new IllegalArgumentException("stream cannot be null");
+        }
+
+        checkAvailable(stream, 8);
         value = stream.readLong();
 
         return value;
@@ -161,13 +188,14 @@ public final class StreamUtils
         throws IOException,
                NotEnoughDataException
     {
-        if(!(checkAvailable(stream, 8)))
-        {
-            throw new NotEnoughDataException(8);
-        }
-
         final double value;
 
+        if(stream == null)
+        {
+            throw new IllegalArgumentException("stream cannot be null");
+        }
+
+        checkAvailable(stream, 8);
         value = stream.readDouble();
 
         return value;

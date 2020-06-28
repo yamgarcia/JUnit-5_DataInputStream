@@ -17,21 +17,26 @@ public class ClassFile {
             if (first4 != MAGIC_NUMBER) {
                 throw new InvalidMagicNumberException(first4);
             }
-            final int f6bytes = StreamUtils.readUnsignedShort(stream);
+            /*final int f6bytes =*/ StreamUtils.readUnsignedShort(stream);
             final int f8bytes = StreamUtils.readUnsignedShort(stream);
             if (f8bytes < MAJOR_NUM_MIN || f8bytes > MAJOR_NUM_MAX) {
                 throw new InvalidMajorVersionException(f8bytes);
             }
         } catch (final NotEnoughDataException ex) {
-            throw new NotEnoughDataException(ex.getExpected());
+            throw new NotEnoughDataException(ex.getExpected(),ex.getActual());
 
         } catch (final IOException ex) {
             throw new IllegalStateException("Not implemented");
 
         }
     }
-
-
 }
 
 
+/*
+does tests really need to import "ca.bcit.comp2526.InvalidConstantPoolIndexException;" ?
+
+where is getType() from MethodHandleKindTest, ConstantPoolEntryMethodTest, and ConstantPoolEntryMethodHandleTest implemented
+
+Cannot resolve method 'getType()' ????? on class MethodHandleKind
+ */

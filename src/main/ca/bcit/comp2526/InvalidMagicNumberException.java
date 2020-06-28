@@ -1,18 +1,19 @@
 package ca.bcit.comp2526;
 
-import java.io.IOException;
-
 public class InvalidMagicNumberException
-        extends ClassFileException {
-    private final long value;
+        extends ClassFileException
+{
+    private final long magicNumber;
 
-    public InvalidMagicNumberException(final long value) {
-        //3405691581
-        super(String.format("Magic number must be 3405691582, was: %d", value));
-        this.value = value;
+    public InvalidMagicNumberException(final long actual)
+    {
+        super(String.format("Magic number must be 0x%08X, was: 0x%08X", 0xCAFEBABEL, actual));
+
+        magicNumber = actual;
     }
 
-    public long getExpected() {
-        return value;
+    public long getMagicNumber()
+    {
+        return magicNumber;
     }
 }
