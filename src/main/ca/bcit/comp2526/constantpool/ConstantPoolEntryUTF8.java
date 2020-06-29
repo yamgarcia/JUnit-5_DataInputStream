@@ -5,35 +5,28 @@ import ca.bcit.comp2526.StreamUtils;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 public class ConstantPoolEntryUTF8
         extends ConstantPoolEntry {
 
-    private int arrSize;
-    private byte[] byteArr;
-    private String message;
     private final static int SLOTS = 1;
+    private String message;
+    private byte[] bytes;
 
     public ConstantPoolEntryUTF8(DataInputStream stream)
             throws IOException, NotEnoughDataException {
 
-        // get the array size
-        this.arrSize = StreamUtils.readUnsignedShort(stream);
+        final int length;
 
-        byteArr = new byte[this.arrSize];
-        for (int i = 0; i < byteArr.length; i++) {
-            byteArr[i] = StreamUtils.readByte(stream);
-        }
+        length = StreamUtils.readUnsignedShort(stream);
+        bytes = new byte[length];
 
-        // get the message
-        this.message = new String(byteArr, StandardCharsets.UTF_8);
-
-//        StreamUtils.readBytes(stream, byteArr);
+        StreamUtils.readBytes(stream, bytes);
+        this.message = new String(bytes);
     }
 
     public byte[] getBytes() {
-        return this.byteArr;
+        return this.bytes.clone();
     }
 
     public ConstantPoolType getType() {
