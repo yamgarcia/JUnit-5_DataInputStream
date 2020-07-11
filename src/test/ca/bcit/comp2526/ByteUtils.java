@@ -1,14 +1,30 @@
 package ca.bcit.comp2526;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public final class ByteUtils
 {
     private ByteUtils()
     {
         throw new IllegalStateException("Do not create instances");
+    }
+
+    public static DataInputStream createStream(final byte[] ... bytes)
+        throws IOException
+    {
+        try(final ByteArrayOutputStream byteStream = new ByteArrayOutputStream())
+        {
+            final byte[] allBytes;
+
+            for(final byte[] array : bytes)
+            {
+                byteStream.writeBytes(array);
+            }
+
+            allBytes = byteStream.toByteArray();
+
+            return new DataInputStream(new ByteArrayInputStream(allBytes));
+        }
     }
 
     public static byte[] byteToBytes(final byte value)

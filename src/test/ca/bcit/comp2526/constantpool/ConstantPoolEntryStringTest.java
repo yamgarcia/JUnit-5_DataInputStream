@@ -2,6 +2,7 @@ package ca.bcit.comp2526.constantpool;
 
 import ca.bcit.comp2526.ByteUtils;
 import ca.bcit.comp2526.ClassFileException;
+import ca.bcit.comp2526.InvalidConstantPoolIndexException;
 import ca.bcit.comp2526.NotEnoughDataException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -55,12 +56,12 @@ public class ConstantPoolEntryStringTest
     }
 
     @Test
-    public void testBadNameIndex()
+    public void testBadStringIndex()
     {
         final InvalidConstantPoolIndexException ex;
 
         ex = assertThrows(InvalidConstantPoolIndexException.class, () -> createInstance(ByteUtils.unsignedShortToBytes(0)));
-        assertThat(ex.getMessage(), equalTo("nameIndex must be > 0, was: 0"));
+        assertThat(ex.getMessage(), equalTo("stringIndex must be > 0, was: 0"));
         assertThat(ex.getIndex(), equalTo(0));
     }
 

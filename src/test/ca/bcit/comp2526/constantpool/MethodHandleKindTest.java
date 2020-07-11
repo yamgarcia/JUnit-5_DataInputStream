@@ -1,5 +1,6 @@
 package ca.bcit.comp2526.constantpool;
 
+import ca.bcit.comp2526.InvalidReferenceKindException;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 

@@ -2,6 +2,7 @@ package ca.bcit.comp2526.constantpool;
 
 import ca.bcit.comp2526.ByteUtils;
 import ca.bcit.comp2526.ClassFileException;
+import ca.bcit.comp2526.InvalidConstantPoolIndexException;
 import ca.bcit.comp2526.NotEnoughDataException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

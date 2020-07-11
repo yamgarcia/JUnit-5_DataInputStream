@@ -2,6 +2,7 @@ package ca.bcit.comp2526.constantpool;
 
 import ca.bcit.comp2526.ByteUtils;
 import ca.bcit.comp2526.ClassFileException;
+import ca.bcit.comp2526.InvalidConstantPoolIndexException;
 import ca.bcit.comp2526.NotEnoughDataException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -49,16 +50,6 @@ public class ConstantPoolEntryDynamicTest
         testNotEnoughData(2, 1, new byte[] { 0x00 });
         testNotEnoughData(2, 0, new byte[] { 0x00, 0x01 });
         testNotEnoughData(2, 1, new byte[] { 0x00, 0x01, 0x02 });
-    }
-
-    @Test
-    public void testBadBootstrapMethodAttrIndex()
-    {
-        final InvalidConstantPoolIndexException ex;
-
-        ex = assertThrows(InvalidConstantPoolIndexException.class, () -> createInstance(ByteUtils.unsignedShortToBytes(0), ByteUtils.unsignedShortToBytes(1)));
-        assertThat(ex.getMessage(), equalTo("bootstrapMethodAttrIndex must be > 0, was: 0"));
-        assertThat(ex.getIndex(), equalTo(0));
     }
 
     @Test

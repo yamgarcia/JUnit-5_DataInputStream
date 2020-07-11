@@ -7,37 +7,32 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 public class ConstantPoolEntryUTF8
-        extends ConstantPoolEntry {
+        extends ConstantPoolEntry
+{
+    private final byte[] bytes;
+    private final String string;
 
-    private final static int SLOTS = 1;
-    private String message;
-    private byte[] bytes;
-
-    public ConstantPoolEntryUTF8(DataInputStream stream)
-            throws IOException, NotEnoughDataException {
+    public ConstantPoolEntryUTF8(final DataInputStream stream)
+            throws IOException,
+            NotEnoughDataException
+    {
+        super(ConstantPoolType.UTF8);
 
         final int length;
 
         length = StreamUtils.readUnsignedShort(stream);
         bytes = new byte[length];
-
         StreamUtils.readBytes(stream, bytes);
-        this.message = new String(bytes);
+        string = new String(bytes);
     }
 
-    public byte[] getBytes() {
-        return this.bytes.clone();
+    public byte[] getBytes()
+    {
+        return bytes.clone();
     }
 
-    public ConstantPoolType getType() {
-        return ConstantPoolType.UTF8;
-    }
-
-    public String getString() {
-        return this.message;
-    }
-
-    public int getNumberOfSlots() {
-        return SLOTS;
+    public String getString()
+    {
+        return string;
     }
 }

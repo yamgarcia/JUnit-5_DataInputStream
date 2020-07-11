@@ -1,44 +1,61 @@
 package ca.bcit.comp2526.constantpool;
 
-public enum MethodHandleKind {
+import ca.bcit.comp2526.InvalidReferenceKindException;
 
-    GET_FIELD ((short)1),
-    GET_STATIC ((short)2),
-    PUT_FIELD ((short)3),
-    PUT_STATIC ((short)4),
-    INVOKE_VIRTUAL ((short)5),
-    INVOKE_STATIC ((short)6),
-    INVOKE_SPECIAL ((short)7),
-    NEW_INVOKE_SPECIAL ((short)8),
-    INVOKE_INTERFACE ((short)9);
+import java.util.HashMap;
+import java.util.Map;
 
-    private final short tag;
+public enum MethodHandleKind
+{
+    GET_FIELD((short)1),
+    GET_STATIC((short)2),
+    PUT_FIELD((short)3),
+    PUT_STATIC((short)4),
+    INVOKE_VIRTUAL((short)5),
+    INVOKE_STATIC((short)6),
+    INVOKE_SPECIAL((short)7),
+    NEW_INVOKE_SPECIAL((short)8),
+    INVOKE_INTERFACE((short)9);
 
-    MethodHandleKind(short tag) {
-        this.tag = tag;
+    private final short type;
+
+    MethodHandleKind(final short t)
+    {
+        type = t;
     }
 
-    public static MethodHandleKind fromType(short i)
-            throws InvalidReferenceKindException {
+    public short getType()
+    {
+        return type;
+    }
 
-        boolean b = false;
-        for (MethodHandleKind c : MethodHandleKind.values()) {
-            if( (int)i == (int)c.tag) {
-                b = true;
-            }
+    private static final Map<Short, MethodHandleKind> TYPES;
+
+    static
+    {
+        TYPES = new HashMap<>();
+        TYPES.put((short)1, GET_FIELD);
+        TYPES.put((short)2, GET_STATIC);
+        TYPES.put((short)3, PUT_FIELD);
+        TYPES.put((short)4, PUT_STATIC);
+        TYPES.put((short)5, INVOKE_VIRTUAL);
+        TYPES.put((short)6, INVOKE_STATIC);
+        TYPES.put((short)7, INVOKE_SPECIAL);
+        TYPES.put((short)8, NEW_INVOKE_SPECIAL);
+        TYPES.put((short)9, INVOKE_INTERFACE);
+    }
+
+    public static MethodHandleKind fromType(final short type)
+            throws InvalidReferenceKindException
+    {
+        final MethodHandleKind kind;
+
+        kind = TYPES.get(type);
+
+        if(kind == null)
+        {
+            throw new InvalidReferenceKindException(type);
         }
-        if(b) {
-            MethodHandleKind tagA = null;
-            for (MethodHandleKind c : MethodHandleKind.values()) {
-                if (c.tag == i) tagA = c;
-            }
-            return tagA;
-        } else {
-            throw new InvalidReferenceKindException(i);
-        }
-    }
 
-    public short getType() {
-        return this.tag;
-    }
-}
+        return kind;
+    }}

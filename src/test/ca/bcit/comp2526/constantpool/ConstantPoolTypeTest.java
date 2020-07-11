@@ -1,11 +1,12 @@
 package ca.bcit.comp2526.constantpool;
 
+import ca.bcit.comp2526.InvalidConstantPoolTagException;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ConstantPoolTypeTest
 {
@@ -69,7 +70,7 @@ class ConstantPoolTypeTest
         final InvalidConstantPoolTagException ex;
 
         ex = assertThrows(InvalidConstantPoolTagException.class, () -> ConstantPoolType.fromTag(tag));
-        assertThat(ex.getMessage(), CoreMatchers.equalTo(String.format("tag must be one of 1, 3, 44, 5, 6, 7, 8, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20, was: %d", tag)));
+        assertThat(ex.getMessage(), CoreMatchers.equalTo(String.format("tag must be one of 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20, was: %d", tag)));
     }
 
     @Test

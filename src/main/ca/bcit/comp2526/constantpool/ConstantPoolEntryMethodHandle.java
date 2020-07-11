@@ -1,45 +1,47 @@
 package ca.bcit.comp2526.constantpool;
 
+import ca.bcit.comp2526.InvalidConstantPoolIndexException;
+import ca.bcit.comp2526.InvalidReferenceKindException;
 import ca.bcit.comp2526.NotEnoughDataException;
 import ca.bcit.comp2526.StreamUtils;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class ConstantPoolEntryMethodHandle extends ConstantPoolEntry {
+public class ConstantPoolEntryMethodHandle
+        extends ConstantPoolEntry
+{
+    private final MethodHandleKind kind;
+    private final int referenceIndex;
 
-    private final static int SLOTS = 1;
-    private short value1;
-    private int value2;
-    private MethodHandleKind value3;
-
-    public ConstantPoolEntryMethodHandle(DataInputStream stream)
+    public ConstantPoolEntryMethodHandle(final DataInputStream stream)
             throws IOException,
             NotEnoughDataException,
-            InvalidConstantPoolIndexException {
-        if (stream == null) throw new InvalidReferenceKindException(StreamUtils.readUnsignedByte(stream));
+            InvalidReferenceKindException,
+            InvalidConstantPoolIndexException
+    {
+        super(ConstantPoolType.METHOD_HANDLE);
 
-        this.value1 = StreamUtils.readUnsignedByte(stream);
-        if (this.value1 == 0) throw new InvalidReferenceKindException(this.value1);
-        this.value2 = StreamUtils.readUnsignedShort(stream);
-        if (this.value2 == 0) throw new InvalidConstantPoolIndexException("referenceIndex", this.value2); //l
+        final short type;
 
-        this.value3 = MethodHandleKind.fromType(value1);
+        type = StreamUtils.readUnsignedByte(stream);
+        kind = MethodHandleKind.fromType(type);
+        referenceIndex = StreamUtils.readUnsignedShort(stream);
+
+        if(referenceIndex == 0)
+        {
+            throw new InvalidConstantPoolIndexException("referenceIndex", referenceIndex);
+        }
     }
 
-    public int getNumberOfSlots() {
-        return SLOTS;
+    public MethodHandleKind getReferenceKind()
+    {
+        return kind;
     }
 
-    public int getReferenceIndex() {
-        return this.value2;
-    }
-
-    public MethodHandleKind getReferenceKind() {
-        return value3;
-    }
-
-    public ConstantPoolType getType() {
-        return ConstantPoolType.METHOD_HANDLE;
+    public int getReferenceIndex()
+    {
+        return referenceIndex;
     }
 }
+

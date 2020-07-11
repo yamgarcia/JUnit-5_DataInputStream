@@ -7,23 +7,13 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 public class ConstantPoolEntryFloat
-        extends ConstantPoolEntry {
-
-    private float value;
-    private final static int SLOTS = 1;
-
-    public ConstantPoolEntryFloat(DataInputStream stream) throws IOException, NotEnoughDataException {
-        this.value = StreamUtils.readFloat(stream);
-    }
-    public int getNumberOfSlots() {
-        return SLOTS;
-    }
-
-    public Number getValue() {
-        return this.value;
-    }
-
-    public ConstantPoolType getType() {
-        return ConstantPoolType.FLOAT;
+        extends ConstantPoolEntryPrimitive<Float>
+{
+    public ConstantPoolEntryFloat(final DataInputStream stream)
+            throws IOException,
+            NotEnoughDataException
+    {
+        super(ConstantPoolType.FLOAT, 1, stream, StreamUtils::readFloat);
     }
 }
+

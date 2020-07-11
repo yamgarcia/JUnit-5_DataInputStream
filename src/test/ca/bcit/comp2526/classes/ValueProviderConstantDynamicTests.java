@@ -1,0 +1,340 @@
+package ca.bcit.comp2526.classes;
+
+import ca.bcit.comp2526.ClassFile;
+import ca.bcit.comp2526.ClassFileException;
+import ca.bcit.comp2526.ClassFileTest;
+import ca.bcit.comp2526.NotEnoughDataException;
+import ca.bcit.comp2526.constantpool.ConstantPoolEntry;
+import ca.bcit.comp2526.constantpool.MethodHandleKind;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+
+import java.io.IOException;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class ValueProviderConstantDynamicTests
+    extends ClassFileTest
+{
+    private ClassFile classFile;
+
+    @BeforeAll
+    public void createClassFile()
+        throws IOException,
+            NotEnoughDataException,
+            ClassFileException
+    {
+        classFile = createClassFile(new byte[] { (byte)0xCA, (byte)0xFE, (byte)0xBA, (byte)0xBE, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x37, (byte)0x00, (byte)0x40, (byte)0x01, (byte)0x00, (byte)0x35, (byte)0x64, (byte)0x65, (byte)0x76, (byte)0x2F, (byte)0x6D, (byte)0x6F, (byte)0x72, (byte)0x6C, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x7A, (byte)0x79, (byte)0x63, (byte)0x6F, (byte)0x6E, (byte)0x73, (byte)0x74, (byte)0x61, (byte)0x6E, (byte)0x74, (byte)0x2F, (byte)0x56, (byte)0x61, (byte)0x6C, (byte)0x75, (byte)0x65, (byte)0x50, (byte)0x72, (byte)0x6F, (byte)0x76, (byte)0x69, (byte)0x64, (byte)0x65, (byte)0x72, (byte)0x43, (byte)0x6F, (byte)0x6E, (byte)0x73, (byte)0x74, (byte)0x61, (byte)0x6E, (byte)0x74, (byte)0x44, (byte)0x79, (byte)0x6E, (byte)0x61, (byte)0x6D, (byte)0x69, (byte)0x63, (byte)0x07, (byte)0x00, (byte)0x01, (byte)0x01, (byte)0x00, (byte)0x10, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x4F, (byte)0x62, (byte)0x6A, (byte)0x65, (byte)0x63, (byte)0x74, (byte)0x07, (byte)0x00, (byte)0x03, (byte)0x01, (byte)0x00, (byte)0x26, (byte)0x64, (byte)0x65, (byte)0x76, (byte)0x2F, (byte)0x6D, (byte)0x6F, (byte)0x72, (byte)0x6C, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x7A, (byte)0x79, (byte)0x63, (byte)0x6F, (byte)0x6E, (byte)0x73, (byte)0x74, (byte)0x61, (byte)0x6E, (byte)0x74, (byte)0x2F, (byte)0x56, (byte)0x61, (byte)0x6C, (byte)0x75, (byte)0x65, (byte)0x50, (byte)0x72, (byte)0x6F, (byte)0x76, (byte)0x69, (byte)0x64, (byte)0x65, (byte)0x72, (byte)0x07, (byte)0x00, (byte)0x05, (byte)0x01, (byte)0x00, (byte)0x21, (byte)0x56, (byte)0x61, (byte)0x6C, (byte)0x75, (byte)0x65, (byte)0x50, (byte)0x72, (byte)0x6F, (byte)0x76, (byte)0x69, (byte)0x64, (byte)0x65, (byte)0x72, (byte)0x43, (byte)0x6F, (byte)0x6E, (byte)0x73, (byte)0x74, (byte)0x61, (byte)0x6E, (byte)0x74, (byte)0x44, (byte)0x79, (byte)0x6E, (byte)0x61, (byte)0x6D, (byte)0x69, (byte)0x63, (byte)0x2E, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x01, (byte)0x00, (byte)0x06, (byte)0x3C, (byte)0x69, (byte)0x6E, (byte)0x69, (byte)0x74, (byte)0x3E, (byte)0x01, (byte)0x00, (byte)0x03, (byte)0x28, (byte)0x29, (byte)0x56, (byte)0x0C, (byte)0x00, (byte)0x08, (byte)0x00, (byte)0x09, (byte)0x0A, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x0A, (byte)0x01, (byte)0x00, (byte)0x04, (byte)0x74, (byte)0x68, (byte)0x69, (byte)0x73, (byte)0x01, (byte)0x00, (byte)0x37, (byte)0x4C, (byte)0x64, (byte)0x65, (byte)0x76, (byte)0x2F, (byte)0x6D, (byte)0x6F, (byte)0x72, (byte)0x6C, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x7A, (byte)0x79, (byte)0x63, (byte)0x6F, (byte)0x6E, (byte)0x73, (byte)0x74, (byte)0x61, (byte)0x6E, (byte)0x74, (byte)0x2F, (byte)0x56, (byte)0x61, (byte)0x6C, (byte)0x75, (byte)0x65, (byte)0x50, (byte)0x72, (byte)0x6F, (byte)0x76, (byte)0x69, (byte)0x64, (byte)0x65, (byte)0x72, (byte)0x43, (byte)0x6F, (byte)0x6E, (byte)0x73, (byte)0x74, (byte)0x61, (byte)0x6E, (byte)0x74, (byte)0x44, (byte)0x79, (byte)0x6E, (byte)0x61, (byte)0x6D, (byte)0x69, (byte)0x63, (byte)0x3B, (byte)0x01, (byte)0x00, (byte)0x08, (byte)0x67, (byte)0x65, (byte)0x74, (byte)0x56, (byte)0x61, (byte)0x6C, (byte)0x75, (byte)0x65, (byte)0x01, (byte)0x00, (byte)0x14, (byte)0x28, (byte)0x29, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x3B, (byte)0x01, (byte)0x00, (byte)0x0A, (byte)0x64, (byte)0x6F, (byte)0x47, (byte)0x65, (byte)0x74, (byte)0x56, (byte)0x61, (byte)0x6C, (byte)0x75, (byte)0x65, (byte)0x0C, (byte)0x00, (byte)0x10, (byte)0x00, (byte)0x0F, (byte)0x0A, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x11, (byte)0x0F, (byte)0x06, (byte)0x00, (byte)0x12, (byte)0x01, (byte)0x00, (byte)0x23, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x69, (byte)0x6E, (byte)0x76, (byte)0x6F, (byte)0x6B, (byte)0x65, (byte)0x2F, (byte)0x43, (byte)0x6F, (byte)0x6E, (byte)0x73, (byte)0x74, (byte)0x61, (byte)0x6E, (byte)0x74, (byte)0x42, (byte)0x6F, (byte)0x6F, (byte)0x74, (byte)0x73, (byte)0x74, (byte)0x72, (byte)0x61, (byte)0x70, (byte)0x73, (byte)0x07, (byte)0x00, (byte)0x14, (byte)0x01, (byte)0x00, (byte)0x06, (byte)0x69, (byte)0x6E, (byte)0x76, (byte)0x6F, (byte)0x6B, (byte)0x65, (byte)0x01, (byte)0x00, (byte)0x90, (byte)0x28, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x69, (byte)0x6E, (byte)0x76, (byte)0x6F, (byte)0x6B, (byte)0x65, (byte)0x2F, (byte)0x4D, (byte)0x65, (byte)0x74, (byte)0x68, (byte)0x6F, (byte)0x64, (byte)0x48, (byte)0x61, (byte)0x6E, (byte)0x64, (byte)0x6C, (byte)0x65, (byte)0x73, (byte)0x24, (byte)0x4C, (byte)0x6F, (byte)0x6F, (byte)0x6B, (byte)0x75, (byte)0x70, (byte)0x3B, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x3B, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x43, (byte)0x6C, (byte)0x61, (byte)0x73, (byte)0x73, (byte)0x3B, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x69, (byte)0x6E, (byte)0x76, (byte)0x6F, (byte)0x6B, (byte)0x65, (byte)0x2F, (byte)0x4D, (byte)0x65, (byte)0x74, (byte)0x68, (byte)0x6F, (byte)0x64, (byte)0x48, (byte)0x61, (byte)0x6E, (byte)0x64, (byte)0x6C, (byte)0x65, (byte)0x3B, (byte)0x5B, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x4F, (byte)0x62, (byte)0x6A, (byte)0x65, (byte)0x63, (byte)0x74, (byte)0x3B, (byte)0x29, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x4F, (byte)0x62, (byte)0x6A, (byte)0x65, (byte)0x63, (byte)0x74, (byte)0x3B, (byte)0x0C, (byte)0x00, (byte)0x16, (byte)0x00, (byte)0x17, (byte)0x0A, (byte)0x00, (byte)0x15, (byte)0x00, (byte)0x18, (byte)0x0F, (byte)0x06, (byte)0x00, (byte)0x19, (byte)0x01, (byte)0x00, (byte)0x04, (byte)0x6E, (byte)0x61, (byte)0x6D, (byte)0x65, (byte)0x01, (byte)0x00, (byte)0x12, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x3B, (byte)0x0C, (byte)0x00, (byte)0x1B, (byte)0x00, (byte)0x1C, (byte)0x11, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x1D, (byte)0x01, (byte)0x00, (byte)0x09, (byte)0x54, (byte)0x48, (byte)0x45, (byte)0x5F, (byte)0x56, (byte)0x41, (byte)0x4C, (byte)0x55, (byte)0x45, (byte)0x08, (byte)0x00, (byte)0x1F, (byte)0x01, (byte)0x00, (byte)0x10, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x53, (byte)0x79, (byte)0x73, (byte)0x74, (byte)0x65, (byte)0x6D, (byte)0x07, (byte)0x00, (byte)0x21, (byte)0x01, (byte)0x00, (byte)0x06, (byte)0x67, (byte)0x65, (byte)0x74, (byte)0x65, (byte)0x6E, (byte)0x76, (byte)0x01, (byte)0x00, (byte)0x26, (byte)0x28, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x3B, (byte)0x29, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x3B, (byte)0x0C, (byte)0x00, (byte)0x23, (byte)0x00, (byte)0x24, (byte)0x0A, (byte)0x00, (byte)0x22, (byte)0x00, (byte)0x25, (byte)0x01, (byte)0x00, (byte)0x04, (byte)0x6D, (byte)0x61, (byte)0x69, (byte)0x6E, (byte)0x01, (byte)0x00, (byte)0x16, (byte)0x28, (byte)0x5B, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x3B, (byte)0x29, (byte)0x56, (byte)0x0A, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x0A, (byte)0x01, (byte)0x00, (byte)0x03, (byte)0x72, (byte)0x75, (byte)0x6E, (byte)0x0C, (byte)0x00, (byte)0x2A, (byte)0x00, (byte)0x09, (byte)0x0A, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x2B, (byte)0x01, (byte)0x00, (byte)0x04, (byte)0x61, (byte)0x72, (byte)0x67, (byte)0x73, (byte)0x01, (byte)0x00, (byte)0x13, (byte)0x5B, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x3B, (byte)0x01, (byte)0x00, (byte)0x03, (byte)0x6F, (byte)0x75, (byte)0x74, (byte)0x01, (byte)0x00, (byte)0x15, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x69, (byte)0x6F, (byte)0x2F, (byte)0x50, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x74, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x65, (byte)0x61, (byte)0x6D, (byte)0x3B, (byte)0x0C, (byte)0x00, (byte)0x2F, (byte)0x00, (byte)0x30, (byte)0x09, (byte)0x00, (byte)0x22, (byte)0x00, (byte)0x31, (byte)0x0C, (byte)0x00, (byte)0x0E, (byte)0x00, (byte)0x0F, (byte)0x0A, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x33, (byte)0x01, (byte)0x00, (byte)0x13, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x69, (byte)0x6F, (byte)0x2F, (byte)0x50, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x74, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x65, (byte)0x61, (byte)0x6D, (byte)0x07, (byte)0x00, (byte)0x35, (byte)0x01, (byte)0x00, (byte)0x07, (byte)0x70, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x74, (byte)0x6C, (byte)0x6E, (byte)0x01, (byte)0x00, (byte)0x15, (byte)0x28, (byte)0x4C, (byte)0x6A, (byte)0x61, (byte)0x76, (byte)0x61, (byte)0x2F, (byte)0x6C, (byte)0x61, (byte)0x6E, (byte)0x67, (byte)0x2F, (byte)0x53, (byte)0x74, (byte)0x72, (byte)0x69, (byte)0x6E, (byte)0x67, (byte)0x3B, (byte)0x29, (byte)0x56, (byte)0x0C, (byte)0x00, (byte)0x37, (byte)0x00, (byte)0x38, (byte)0x0A, (byte)0x00, (byte)0x36, (byte)0x00, (byte)0x39, (byte)0x01, (byte)0x00, (byte)0x04, (byte)0x43, (byte)0x6F, (byte)0x64, (byte)0x65, (byte)0x01, (byte)0x00, (byte)0x0F, (byte)0x4C, (byte)0x69, (byte)0x6E, (byte)0x65, (byte)0x4E, (byte)0x75, (byte)0x6D, (byte)0x62, (byte)0x65, (byte)0x72, (byte)0x54, (byte)0x61, (byte)0x62, (byte)0x6C, (byte)0x65, (byte)0x01, (byte)0x00, (byte)0x12, (byte)0x4C, (byte)0x6F, (byte)0x63, (byte)0x61, (byte)0x6C, (byte)0x56, (byte)0x61, (byte)0x72, (byte)0x69, (byte)0x61, (byte)0x62, (byte)0x6C, (byte)0x65, (byte)0x54, (byte)0x61, (byte)0x62, (byte)0x6C, (byte)0x65, (byte)0x01, (byte)0x00, (byte)0x0A, (byte)0x53, (byte)0x6F, (byte)0x75, (byte)0x72, (byte)0x63, (byte)0x65, (byte)0x46, (byte)0x69, (byte)0x6C, (byte)0x65, (byte)0x01, (byte)0x00, (byte)0x10, (byte)0x42, (byte)0x6F, (byte)0x6F, (byte)0x74, (byte)0x73, (byte)0x74, (byte)0x72, (byte)0x61, (byte)0x70, (byte)0x4D, (byte)0x65, (byte)0x74, (byte)0x68, (byte)0x6F, (byte)0x64, (byte)0x73, (byte)0x00, (byte)0x21, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x06, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x05, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x08, (byte)0x00, (byte)0x09, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x3B, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x2F, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x05, (byte)0x2A, (byte)0xB7, (byte)0x00, (byte)0x0B, (byte)0xB1, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x3C, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x06, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x03, (byte)0x00, (byte)0x3D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0C, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x05, (byte)0x00, (byte)0x0C, (byte)0x00, (byte)0x0D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x0E, (byte)0x00, (byte)0x0F, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x3B, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x2D, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x03, (byte)0x12, (byte)0x1E, (byte)0xB0, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x3C, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x06, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x07, (byte)0x00, (byte)0x3D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0C, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x03, (byte)0x00, (byte)0x0C, (byte)0x00, (byte)0x0D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x09, (byte)0x00, (byte)0x10, (byte)0x00, (byte)0x0F, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x3B, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x1E, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x06, (byte)0x12, (byte)0x20, (byte)0xB8, (byte)0x00, (byte)0x26, (byte)0xB0, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x3C, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x06, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0B, (byte)0x00, (byte)0x09, (byte)0x00, (byte)0x27, (byte)0x00, (byte)0x28, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x3B, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x39, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0B, (byte)0xBB, (byte)0x00, (byte)0x02, (byte)0x59, (byte)0xB7, (byte)0x00, (byte)0x29, (byte)0xB6, (byte)0x00, (byte)0x2C, (byte)0xB1, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x3C, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0A, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0x00, (byte)0x0A, (byte)0x00, (byte)0x10, (byte)0x00, (byte)0x3D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0C, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0B, (byte)0x00, (byte)0x2D, (byte)0x00, (byte)0x2E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x2A, (byte)0x00, (byte)0x09, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x3B, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x39, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0B, (byte)0xB2, (byte)0x00, (byte)0x32, (byte)0x2A, (byte)0xB6, (byte)0x00, (byte)0x34, (byte)0xB6, (byte)0x00, (byte)0x3A, (byte)0xB1, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x3C, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0A, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x13, (byte)0x00, (byte)0x0A, (byte)0x00, (byte)0x14, (byte)0x00, (byte)0x3D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0C, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0B, (byte)0x00, (byte)0x0C, (byte)0x00, (byte)0x0D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x3E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x07, (byte)0x00, (byte)0x3F, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x08, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x1A, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x13 });
+    }
+
+    @Test
+    public void testMagicNumber()
+    {
+        assertThat(classFile.getMagicNumber(), equalTo(0xCAFEBABEL));
+    }
+
+    @Test
+    public void testMinorNumber()
+    {
+        assertThat(classFile.getMinorVersion(), equalTo(0));
+    }
+
+    @Test
+    public void testMajorNumber()
+    {
+        assertThat(classFile.getMajorVersion(), equalTo(55));
+    }
+
+    @Test
+    public void testConstantPool()
+    {
+        ConstantPoolEntry entry;
+
+        assertThat(classFile.getConstantPoolCount(), equalTo(63));
+
+        entry = classFile.getConstantPoolEntry(0);
+        assertNull(entry);
+
+        entry = classFile.getConstantPoolEntry(1);
+        assertNotNull(entry);
+        checkUTF8(entry, "dev/morling/lazyconstant/ValueProviderConstantDynamic");
+
+        entry = classFile.getConstantPoolEntry(2);
+        assertNotNull(entry);
+        checkClass(entry, 1);
+
+        entry = classFile.getConstantPoolEntry(3);
+        assertNotNull(entry);
+        checkUTF8(entry, "java/lang/Object");
+
+        entry = classFile.getConstantPoolEntry(4);
+        assertNotNull(entry);
+        checkClass(entry, 3);
+
+        entry = classFile.getConstantPoolEntry(5);
+        assertNotNull(entry);
+        checkUTF8(entry, "dev/morling/lazyconstant/ValueProvider");
+
+        entry = classFile.getConstantPoolEntry(6);
+        assertNotNull(entry);
+        checkClass(entry, 5);
+
+        entry = classFile.getConstantPoolEntry(7);
+        assertNotNull(entry);
+        checkUTF8(entry, "ValueProviderConstantDynamic.java");
+
+        entry = classFile.getConstantPoolEntry(8);
+        assertNotNull(entry);
+        checkUTF8(entry, "<init>");
+
+        entry = classFile.getConstantPoolEntry(9);
+        assertNotNull(entry);
+        checkUTF8(entry, "()V");
+
+        entry = classFile.getConstantPoolEntry(10);
+        assertNotNull(entry);
+        checkNameAndType(entry, 8, 9);
+
+        entry = classFile.getConstantPoolEntry(11);
+        assertNotNull(entry);
+        checkMethod(entry, 4, 10);
+
+        entry = classFile.getConstantPoolEntry(12);
+        assertNotNull(entry);
+        checkUTF8(entry, "this");
+
+        entry = classFile.getConstantPoolEntry(13);
+        assertNotNull(entry);
+        checkUTF8(entry, "Ldev/morling/lazyconstant/ValueProviderConstantDynamic;");
+
+        entry = classFile.getConstantPoolEntry(14);
+        assertNotNull(entry);
+        checkUTF8(entry, "getValue");
+
+        entry = classFile.getConstantPoolEntry(15);
+        assertNotNull(entry);
+        checkUTF8(entry, "()Ljava/lang/String;");
+
+        entry = classFile.getConstantPoolEntry(16);
+        assertNotNull(entry);
+        checkUTF8(entry, "doGetValue");
+
+        entry = classFile.getConstantPoolEntry(17);
+        assertNotNull(entry);
+        checkNameAndType(entry, 16, 15);
+
+        entry = classFile.getConstantPoolEntry(18);
+        assertNotNull(entry);
+        checkMethod(entry, 2, 17);
+
+        entry = classFile.getConstantPoolEntry(19);
+        assertNotNull(entry);
+        checkMethodHandle(entry, MethodHandleKind.INVOKE_STATIC, 18);
+
+        entry = classFile.getConstantPoolEntry(20);
+        assertNotNull(entry);
+        checkUTF8(entry, "java/lang/invoke/ConstantBootstraps");
+
+        entry = classFile.getConstantPoolEntry(21);
+        assertNotNull(entry);
+        checkClass(entry, 20);
+
+        entry = classFile.getConstantPoolEntry(22);
+        assertNotNull(entry);
+        checkUTF8(entry, "invoke");
+
+        entry = classFile.getConstantPoolEntry(23);
+        assertNotNull(entry);
+        checkUTF8(entry, "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;Ljava/lang/invoke/MethodHandle;[Ljava/lang/Object;)Ljava/lang/Object;");
+
+        entry = classFile.getConstantPoolEntry(24);
+        assertNotNull(entry);
+        checkNameAndType(entry, 22, 23);
+
+        entry = classFile.getConstantPoolEntry(25);
+        assertNotNull(entry);
+        checkMethod(entry, 21, 24);
+
+        entry = classFile.getConstantPoolEntry(26);
+        assertNotNull(entry);
+        checkMethodHandle(entry, MethodHandleKind.INVOKE_STATIC, 25);
+
+        entry = classFile.getConstantPoolEntry(27);
+        assertNotNull(entry);
+        checkUTF8(entry, "name");
+
+        entry = classFile.getConstantPoolEntry(28);
+        assertNotNull(entry);
+        checkUTF8(entry, "Ljava/lang/String;");
+
+        entry = classFile.getConstantPoolEntry(29);
+        assertNotNull(entry);
+        checkNameAndType(entry, 27, 28);
+
+        entry = classFile.getConstantPoolEntry(30);
+        assertNotNull(entry);
+        checkDynamic(entry, 0, 29);
+
+        entry = classFile.getConstantPoolEntry(31);
+        assertNotNull(entry);
+        checkUTF8(entry, "THE_VALUE");
+
+        entry = classFile.getConstantPoolEntry(32);
+        assertNotNull(entry);
+        checkString(entry, 31);
+
+        entry = classFile.getConstantPoolEntry(33);
+        assertNotNull(entry);
+        checkUTF8(entry, "java/lang/System");
+
+        entry = classFile.getConstantPoolEntry(34);
+        assertNotNull(entry);
+        checkClass(entry, 33);
+
+        entry = classFile.getConstantPoolEntry(35);
+        assertNotNull(entry);
+        checkUTF8(entry, "getenv");
+
+        entry = classFile.getConstantPoolEntry(36);
+        assertNotNull(entry);
+        checkUTF8(entry, "(Ljava/lang/String;)Ljava/lang/String;");
+
+        entry = classFile.getConstantPoolEntry(37);
+        assertNotNull(entry);
+        checkNameAndType(entry, 35, 36);
+
+        entry = classFile.getConstantPoolEntry(38);
+        assertNotNull(entry);
+        checkMethod(entry, 34, 37);
+
+        entry = classFile.getConstantPoolEntry(39);
+        assertNotNull(entry);
+        checkUTF8(entry, "main");
+
+        entry = classFile.getConstantPoolEntry(40);
+        assertNotNull(entry);
+        checkUTF8(entry, "([Ljava/lang/String;)V");
+
+        entry = classFile.getConstantPoolEntry(41);
+        assertNotNull(entry);
+        checkMethod(entry, 2, 10);
+
+        entry = classFile.getConstantPoolEntry(42);
+        assertNotNull(entry);
+        checkUTF8(entry, "run");
+
+        entry = classFile.getConstantPoolEntry(43);
+        assertNotNull(entry);
+        checkNameAndType(entry, 42, 9);
+
+        entry = classFile.getConstantPoolEntry(44);
+        assertNotNull(entry);
+        checkMethod(entry, 2, 43);
+
+        entry = classFile.getConstantPoolEntry(45);
+        assertNotNull(entry);
+        checkUTF8(entry, "args");
+
+        entry = classFile.getConstantPoolEntry(46);
+        assertNotNull(entry);
+        checkUTF8(entry, "[Ljava/lang/String;");
+
+        entry = classFile.getConstantPoolEntry(47);
+        assertNotNull(entry);
+        checkUTF8(entry, "out");
+
+        entry = classFile.getConstantPoolEntry(48);
+        assertNotNull(entry);
+        checkUTF8(entry, "Ljava/io/PrintStream;");
+
+        entry = classFile.getConstantPoolEntry(49);
+        assertNotNull(entry);
+        checkNameAndType(entry, 47, 48);
+
+        entry = classFile.getConstantPoolEntry(50);
+        assertNotNull(entry);
+        checkField(entry, 34, 49);
+
+        entry = classFile.getConstantPoolEntry(51);
+        assertNotNull(entry);
+        checkNameAndType(entry, 14, 15);
+
+        entry = classFile.getConstantPoolEntry(52);
+        assertNotNull(entry);
+        checkMethod(entry, 2, 51);
+
+        entry = classFile.getConstantPoolEntry(53);
+        assertNotNull(entry);
+        checkUTF8(entry, "java/io/PrintStream");
+
+        entry = classFile.getConstantPoolEntry(54);
+        assertNotNull(entry);
+        checkClass(entry, 53);
+
+        entry = classFile.getConstantPoolEntry(55);
+        assertNotNull(entry);
+        checkUTF8(entry, "println");
+
+        entry = classFile.getConstantPoolEntry(56);
+        assertNotNull(entry);
+        checkUTF8(entry, "(Ljava/lang/String;)V");
+
+        entry = classFile.getConstantPoolEntry(57);
+        assertNotNull(entry);
+        checkNameAndType(entry, 55, 56);
+
+        entry = classFile.getConstantPoolEntry(58);
+        assertNotNull(entry);
+        checkMethod(entry, 54, 57);
+
+        entry = classFile.getConstantPoolEntry(59);
+        assertNotNull(entry);
+        checkUTF8(entry, "Code");
+
+        entry = classFile.getConstantPoolEntry(60);
+        assertNotNull(entry);
+        checkUTF8(entry, "LineNumberTable");
+
+        entry = classFile.getConstantPoolEntry(61);
+        assertNotNull(entry);
+        checkUTF8(entry, "LocalVariableTable");
+
+        entry = classFile.getConstantPoolEntry(62);
+        assertNotNull(entry);
+        checkUTF8(entry, "SourceFile");
+
+        entry = classFile.getConstantPoolEntry(63);
+        assertNotNull(entry);
+        checkUTF8(entry, "BootstrapMethods");
+    }
+
+    @Test
+    public void testAccess()
+    {
+        assertThat(classFile.getAccessFlags(), equalTo(33));
+    }
+
+    @Test
+    public void testThisClass()
+    {
+        assertThat(classFile.getThisClass(), equalTo(2));
+    }
+
+    @Test
+    public void testSuperClass()
+    {
+        assertThat(classFile.getSuperClass(), equalTo(4));
+    }
+
+    @Test
+    public void testInterfaces()
+    {
+        assertThat(classFile.getInterfacesCount(), equalTo(1));
+        assertThat(classFile.getInterface(0), equalTo(6));
+    }
+}

@@ -1,42 +1,48 @@
 package ca.bcit.comp2526.constantpool;
 
+import ca.bcit.comp2526.InvalidConstantPoolIndexException;
 import ca.bcit.comp2526.NotEnoughDataException;
 import ca.bcit.comp2526.StreamUtils;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class ConstantPoolEntryNameAndType extends ConstantPoolEntry {
-    private final static int SLOTS = 1;
-    private int value1;
-    private int value2;
+public class ConstantPoolEntryNameAndType
+        extends ConstantPoolEntry
+{
+    private final int nameIndex;
+    private final int descriptorIndex;
 
-
-    public ConstantPoolEntryNameAndType(DataInputStream stream)
+    public ConstantPoolEntryNameAndType(final DataInputStream stream)
             throws IOException,
             NotEnoughDataException,
-            InvalidConstantPoolIndexException {
-        this.value1 = StreamUtils.readUnsignedShort(stream);
-        if (this.value1 == 0) throw new InvalidConstantPoolIndexException("nameIndex", this.value1);
-        this.value2 = StreamUtils.readUnsignedShort(stream);
-        if (this.value2 == 0) throw new InvalidConstantPoolIndexException("descriptorIndex", this.value2);
+            InvalidConstantPoolIndexException
+    {
+        super(ConstantPoolType.NAME_AND_TYPE);
+
+        nameIndex = StreamUtils.readUnsignedShort(stream);
+
+        if(nameIndex == 0)
+        {
+            throw new InvalidConstantPoolIndexException("nameIndex", nameIndex);
+        }
+
+        descriptorIndex = StreamUtils.readUnsignedShort(stream);
+
+        if(descriptorIndex == 0)
+        {
+            throw new InvalidConstantPoolIndexException("descriptorIndex", descriptorIndex);
+        }
     }
 
-    public int getNumberOfSlots() {
-        return SLOTS;
+    public int getNameIndex()
+    {
+        return nameIndex;
     }
 
-    public int getNameIndex() {
-        return this.value1;
+    public int getDescriptorIndex()
+    {
+        return descriptorIndex;
     }
 
-    public int getDescriptorIndex() {
-
-        if (this.value1 == 1) return 2;
-        else return 1;
-    }
-
-    public ConstantPoolType getType() {
-        return ConstantPoolType.NAME_AND_TYPE;
-    }
 }

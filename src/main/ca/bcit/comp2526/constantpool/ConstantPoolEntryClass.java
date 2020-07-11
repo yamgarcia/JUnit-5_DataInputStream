@@ -1,35 +1,34 @@
 package ca.bcit.comp2526.constantpool;
 
-import ca.bcit.comp2526.*;
+import ca.bcit.comp2526.InvalidConstantPoolIndexException;
+import ca.bcit.comp2526.NotEnoughDataException;
+import ca.bcit.comp2526.StreamUtils;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
 public class ConstantPoolEntryClass
-        extends ConstantPoolEntry {
+    extends ConstantPoolEntry
+{
+    private final int nameIndex;
 
-    private final static int SLOTS = 1;
-    private final int value;
+    public ConstantPoolEntryClass(final DataInputStream stream)
+        throws IOException,
+            NotEnoughDataException,
+            InvalidConstantPoolIndexException
+    {
+        super(ConstantPoolType.CLASS);
 
-    public ConstantPoolEntryClass(DataInputStream stream)
-            throws NotEnoughDataException,
-            IOException,
-            InvalidConstantPoolIndexException {
+        nameIndex = StreamUtils.readUnsignedShort(stream);
 
-        this.value = StreamUtils.readUnsignedShort(stream);
-        if (this.value == 0) throw new InvalidConstantPoolIndexException(this.value);
+        if(nameIndex == 0)
+        {
+            throw new InvalidConstantPoolIndexException("nameIndex", nameIndex);
+        }
     }
 
-    public int getNumberOfSlots() {
-        return SLOTS;
+    public int getNameIndex()
+    {
+        return nameIndex;
     }
-
-    public int getNameIndex() {
-        return this.value;
-    }
-
-    public ConstantPoolType getType() {
-        return ConstantPoolType.CLASS;
-    }
-
 }

@@ -1,0 +1,20 @@
+package ca.bcit.comp2526;
+
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class MissingConstantPoolCountTests
+    extends ClassFileTest
+{
+    @Test
+    public void createClassFile()
+    {
+        final NotEnoughDataException ex;
+
+        ex = assertThrows(NotEnoughDataException.class, () -> createClassFile(new byte[] { (byte)0xCA, (byte)0xFE, (byte)0xBA, (byte)0xBE, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x37 }));
+        assertThat(ex.getMessage(), equalTo("Require 2 bytes to be available, have: 0"));
+    }
+}
